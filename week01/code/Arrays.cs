@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 public static class Arrays
 {
     /// <summary>
@@ -8,12 +11,29 @@ public static class Arrays
     /// <returns>array of doubles that are the multiples of the supplied number</returns>
     public static double[] MultiplesOf(double number, int length)
     {
-        // TODO Problem 1 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+        // PLAN:
+        // 1. Create an array of doubles of size 'length'.
+        // 2. For each index i from 0 to length-1, compute the (i+1)-th multiple: number * (i + 1).
+        // 3. Store that value at result[i].
+        // 4. Return the filled array.
+        //
+        // Note: The assignment states length > 0, but we include a defensive check to return an empty array
+        // if a non-positive length is supplied (this won't break tests that always send valid input).
 
-        return []; // replace this return statement with your own
+        if (length <= 0)
+        {
+            return new double[0];
+        }
+
+        double[] result = new double[length];
+
+        for (int i = 0; i < length; i++)
+        {
+            // i is zero-based so the multiple is (i + 1)
+            result[i] = number * (i + 1);
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -25,9 +45,43 @@ public static class Arrays
     /// </summary>
     public static void RotateListRight(List<int> data, int amount)
     {
-        // TODO Problem 2 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+        // PLAN:
+        // 1. Validate input: if data is null -> throw ArgumentNullException. If data.Count == 0 -> nothing to do.
+        // 2. Normalize amount: amount = amount % data.Count (this handles amount == data.Count).
+        // 3. If normalized amount == 0 -> return because rotation does nothing.
+        // 4. Use list slicing methods to modify the list in-place:
+        //      - tail = data.GetRange(data.Count - amount, amount);
+        //      - data.RemoveRange(data.Count - amount, amount);
+        //      - data.InsertRange(0, tail);
+        // 5. After InsertRange, the original list is rotated as required.
+        //
+        // This mutates the provided list `data` (as the problem requests).
+
+        if (data == null)
+        {
+            throw new ArgumentNullException(nameof(data));
+        }
+
+        int n = data.Count;
+        if (n == 0)
+        {
+            return;
+        }
+
+        // Normalize amount (defensive in case inputs are larger than expected)
+        amount = amount % n;
+        if (amount == 0)
+        {
+            return;
+        }
+
+        // Extract the last 'amount' elements
+        List<int> tail = data.GetRange(n - amount, amount);
+
+        // Remove those elements from the end
+        data.RemoveRange(n - amount, amount);
+
+        // Insert the extracted elements at the front
+        data.InsertRange(0, tail);
     }
 }
